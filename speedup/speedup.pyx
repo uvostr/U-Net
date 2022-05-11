@@ -335,8 +335,10 @@ def solve_inverse_implicit_split(out, dim, m, w_, stationary_defocus, mu1, k1, m
 
     for l in range(m):
         ext_out[:, :, l] = np.fft.fft2(ext_out[:, :, l])
+        ext_out[:, :, l] = np.fft.fftshift(ext_out[:, :, l])
     for l in range(2 * m - 1):
         ext_h[:, :, l] = np.fft.fft2(ext_h[:, :, l])
+        ext_h[:, :, l] = np.fft.fftshift(ext_h[:, :, l])
 
 
 
@@ -352,6 +354,7 @@ def solve_inverse_implicit_split(out, dim, m, w_, stationary_defocus, mu1, k1, m
 
     for i in range(m):
         result[:,:,i] = np.fft.ifft2(result[:,:,i])
+        result[:,:,i] = np.fft.ifftshift(result[:,:,i])
 
     return result.real
 
@@ -374,11 +377,13 @@ def VFC(original, recovered, rings, dim):
   original = original / np.var(original)
   original = original / np.mean(original)
   original = np.fft.fft2(original)
+  original = np.fft.fftshift(original)
   original = original / np.max(original)
   recovered = recovered + np.abs(np.amin(recovered))
   recovered = recovered / np.var(recovered)
   recovered = recovered / np.mean(recovered)
   recovered = np.fft.fft2(recovered)
+  recovered = np.fft.fftshift(recovered)
   recovered = recovered / np.max(recovered)
   tmp = recovered / original
   tmp = np.abs(tmp)
