@@ -26,6 +26,11 @@ cpdef real_t p_func(real_t x, real_t y, real_t a):
 cpdef real_t p_func3(real_t x, real_t y, real_t coef, real_t a_10, real_t a_01, real_t b_20, real_t b_11, real_t b_02, real_t c_30, real_t c_21, real_t c_12, real_t c_03):
     return coef * (a_10 * x + a_01 * y + b_20 * x * x + b_11 * x * y + b_02 * y * y + c_30 * x * x * x + c_21 * x * x * y + c_12 * x * y * y + c_03 * y * y * y)
 
+cpdef int sign(int a):
+    if a < 0:
+        return -1
+    else:
+        return 1
 
 @boundscheck(False)
 @wraparound(False)
@@ -77,7 +82,7 @@ cpdef generate_psf(int dim, int m, real_t w_, real_t stationary_defocus):
         layer = l - m + 1
         for i in range(dim_x):
             for j in range(dim_y):
-                temp = p_func(x[i], y[j], ps_value * (layer) / (m-1)) + p_func(x[i], y[j], ps_value * stationary_defocus)
+                temp = p_func(x[i], y[j], ps_value * (layer) / (m-1)) + p_func(x[i], y[j], sign(layer) * ps_value * stationary_defocus)
                 inner_h_view[i, j] = m_func(x[i], y[j], R, n_coef) * (cos(temp) + 1j * sin(temp))
 
         fft_inner_h = np.fft.fft2(inner_h)
@@ -144,7 +149,7 @@ cpdef generate_psf3(int dim, int m, real_t w_, real_t stationary_defocus, real_t
         layer = l - m + 1
         for i in range(dim_x):
             for j in range(dim_y):
-                temp = p_func3(x[i], y[j], ps_value * (layer) / (m-1), a_10, a_01, b_20, b_11, b_02, c_30, c_21, c_12, c_03) + p_func3(x[i], y[j], ps_value * stationary_defocus, a_10, a_01, b_20, b_11, b_02, c_30, c_21, c_12, c_03)
+                temp = p_func3(x[i], y[j], ps_value * (layer) / (m-1), a_10, a_01, b_20, b_11, b_02, c_30, c_21, c_12, c_03) + p_func3(x[i], y[j], sign(layer) * ps_value * stationary_defocus, a_10, a_01, b_20, b_11, b_02, c_30, c_21, c_12, c_03)
                 inner_h_view[i, j] = m_func(x[i], y[j], R, n_coef) * (cos(temp) + 1j * sin(temp))
 
         fft_inner_h = np.fft.fft2(inner_h)
