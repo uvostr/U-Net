@@ -76,7 +76,7 @@ cpdef generate_psf(int dim, int m, real_t w_, real_t stationary_defocus):
         layer = l - m + 1
         for i in range(dim_x):
             for j in range(dim_y):
-                temp = p_func(x[i], y[j], ps_value * (layer) / (m-1)) + p_func(x[i], y[j], layer * ps_value * stationary_defocus)
+                temp = p_func(x[i], y[j], ps_value * (layer) / (m-1)) + p_func(x[i], y[j], ps_value * stationary_defocus)
                 inner_h_view[i, j] = m_func(x[i], y[j], R, n_coef) * (cos(temp) + 1j * sin(temp))
 
         fft_inner_h = np.fft.fft2(inner_h)
@@ -143,7 +143,7 @@ cpdef generate_psf3(int dim, int m, real_t w_, real_t stationary_defocus, real_t
         layer = l - m + 1
         for i in range(dim_x):
             for j in range(dim_y):
-                temp = p_func3(x[i], y[j], ps_value * (layer) / (m-1), a_10, a_01, b_20, b_11, b_02, c_30, c_21, c_12, c_03) + p_func(x[i], y[j], layer * ps_value * stationary_defocus)
+                temp = p_func3(x[i], y[j], ps_value * (layer) / (m-1), a_10, a_01, b_20, b_11, b_02, c_30, c_21, c_12, c_03) + p_func(x[i], y[j], ps_value * stationary_defocus)
                 inner_h_view[i, j] = m_func(x[i], y[j], R, n_coef) * (cos(temp) + 1j * sin(temp))
 
         fft_inner_h = np.fft.fft2(inner_h)
